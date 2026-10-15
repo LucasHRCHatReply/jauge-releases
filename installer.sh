@@ -46,6 +46,12 @@ step 3 "Téléchargement et contrôle"
 WORK=$(mktemp -d "${TMPDIR:-/tmp}/jauge-install.XXXXXX") || fail "dossier temporaire impossible"
 trap 'rm -rf "$WORK"' EXIT
 curl -fL --silent --show-error -o "$WORK/Jauge.zip" "$ZIP_URL" || fail "téléchargement impossible (réseau coupé, ou aucune version publiée) : $ZIP_URL"
+# Empreinte publiée avec la Release (depuis la 1.0.3) : si elle existe, elle doit correspondre.
+if curl -fL --silent -o "$WORK/Jauge.zip.sha256" "$ZIP_URL.sha256" 2>/dev/null && [[ -s "$WORK/Jauge.zip.sha256" ]]; then
+  want=$(awk '{print $1; exit}' "$WORK/Jauge.zip.sha256"); have=$(shasum -a 256 "$WORK/Jauge.zip" | awk '{print $1}')
+  [[ "$want" == "$have" ]] || fail "l'empreinte SHA-256 du zip ne correspond pas à celle publiée : installation refusée."
+  echo "  empreinte SHA-256 : conforme"
+fi
 ditto -x -k "$WORK/Jauge.zip" "$WORK/contenu" || fail "le zip est illisible"
 DIR=$(ls -d "$WORK"/contenu/Jauge-* 2>/dev/null | head -1)
 [[ -n "$DIR" && -d "$DIR/Jauge.app" && -f "$DIR/install.sh" ]] || fail "le zip n'a pas le contenu attendu (Jauge-X.Y.Z/Jauge.app et install.sh)."
