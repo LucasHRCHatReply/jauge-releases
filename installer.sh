@@ -87,7 +87,9 @@ echo "  Jauge est installée et active."
 [[ -n "$APRES" ]] && echo "  après : $APRES"
 
 step 5 "Rapport de test"
-if ! "$CTL" --ctl 2>&1 | grep -q fichier; then
+INSTALLEE=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist" 2>/dev/null)
+# Le rapport sur fichier existe depuis la 1.0.2.
+if [[ "$(printf '%s\n%s\n' 1.0.2 "${INSTALLEE:-0}" | sort -V | head -1)" != "1.0.2" ]]; then
   echo "  Cette version ne sait pas encore écrire de rapport : rien à envoyer."
 elif [[ "$RAPPORT" == "oui" ]] || { [[ "$RAPPORT" == "ask" ]] && ask "  Écrire un rapport de test (modèle, clés de charge, batterie) sur le Bureau, à envoyer à Lucas ?"; }; then
   "$CTL" --ctl rapport --fichier | tail -2
