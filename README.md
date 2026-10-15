@@ -28,6 +28,21 @@ Le script télécharge la dernière version, vérifie la signature (équipe Appl
 appareils. Une seule étape reste manuelle, une fois : Réglages Système › Général › Ouverture et arrière-plan,
 activer « Jauge ».
 
+## Installer en faisant le ménage
+
+Si plusieurs copies de Jauge traînent (Téléchargements, Bureau, `/Applications`), un ancien service peut rester actif :
+
+```
+curl -fsSL https://raw.githubusercontent.com/LucasHRCHatReply/jauge-releases/main/installer.sh | zsh -s -- --propre
+```
+
+Avant d'installer, `--propre` quitte Jauge, désinscrit son service, **liste** les autres copies de `Jauge.app` (identifiant
+`fr.jauge.app`, trouvées par Spotlight, hors `~/Applications`) et les met à la **Corbeille** (jamais supprimées) : une
+confirmation par copie, ou aucune avec `--oui` (`zsh -s -- --propre --oui`). Il retire aussi les anciens fichiers de
+lancement du service laissés hors de l'app, puis installe et vérifie que l'app et le service ont la même version.
+Réglages et historique ne sont jamais touchés ; sur un Mac de développement, tout ce qui est sous `~/Jauge` et
+`~/Library/Developer` est ignoré.
+
 ## Avertissement : app non validée par Apple
 
 Jauge est signée mais pas « notarisée » : cela demande un compte développeur payant. macOS la juge donc non
