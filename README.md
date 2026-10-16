@@ -17,7 +17,11 @@ Aucun compte GitHub, aucun outil à installer, aucun mot de passe administrateur
 
 ## Installer
 
-Dans Terminal (Cmd + Espace, « Terminal »), une seule commande, qui installe aussi les mises à jour :
+Deux façons, au choix.
+
+**1. Le fichier d'installation (le plus simple).** Télécharger [Jauge.dmg](https://github.com/LucasHRCHatReply/jauge-releases/releases/latest/download/Jauge.dmg), l'ouvrir, puis glisser Jauge dans Applications. Au premier lancement macOS refuse d'ouvrir l'app (voir l'avertissement plus bas) : clic droit sur Jauge › Ouvrir, ou Réglages Système › Confidentialité et sécurité › « Ouvrir quand même ». Il reste ensuite à activer « Jauge » dans Réglages Système › Général › Ouverture et arrière-plan. Au premier lancement, un didacticiel de trois écrans fait essayer Jauge ; il se rouvre depuis Aide › Didacticiel.
+
+**2. Une commande dans Terminal.** Dans Terminal (Cmd + Espace, « Terminal »), une seule commande, qui installe aussi les mises à jour :
 
 ```
 curl -fsSL https://raw.githubusercontent.com/LucasHRCHatReply/jauge-releases/main/installer.sh | zsh
