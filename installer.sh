@@ -4,7 +4,7 @@
 # Options (après `zsh -s --`) : --oui (quitter AlDente sans demander), --rapport (écrire le rapport de test sur
 # le Bureau), --sans-rapport, --propre (installation qui fait le ménage : voir plus bas). Sans terminal, le script
 # ne pose jamais de question.
-# Réglages, historique et appareils ne sont jamais touchés. Aucun mot de passe administrateur.
+# Réglages, historique et appareils ne sont jamais touchés. Jauge se place dans /Applications : macOS demande alors le mot de passe du Mac dans sa propre boîte (le démon de charge tourne en root, personne d'autre ne doit pouvoir le remplacer).
 # --propre : avant d'installer, quitte Jauge, désinscrit le démon, liste les AUTRES copies de Jauge.app (identifiant
 # fr.jauge.app, trouvées par Spotlight, hors ~/Applications) et les met à la Corbeille (jamais rm -rf ; avec --oui
 # sans demander, sinon une confirmation par copie), retire les anciens plist de lancement et binaires du démon laissés
@@ -28,7 +28,8 @@ step() { echo "\n[$1/5] $2"; }
 if [[ -z "${JAUGE_SANS_TTY:-}" && -r /dev/tty ]] && { : </dev/tty; } 2>/dev/null; then HAS_TTY=1; else HAS_TTY=0; fi
 ask() { (( HAS_TTY )) || return 1; local r; read -q "r?$1 [o/N] " </dev/tty || { echo; return 1; }; echo; return 0 }
 
-APP="$HOME/Applications/Jauge.app"
+APP="/Applications/Jauge.app"
+[[ -d "$APP" ]] || { [[ -d "$HOME/Applications/Jauge.app" ]] && APP="$HOME/Applications/Jauge.app"; }   # ancienne installation
 CTL="$APP/Contents/MacOS/Jauge"
 
 # Met un fichier ou une app à la Corbeille (jamais rm -rf). JAUGE_CORBEILLE : dossier de remplacement (essais).
@@ -66,7 +67,7 @@ menage() {
     "$CTL" --ctl unregister >/dev/null 2>&1 || true
     [[ -z "${JAUGE_PROPRE_SEUL:-}" ]] && sleep 1
     echo "  démon désinscrit"
-  else echo "  aucune Jauge installée dans ~/Applications : rien à désinscrire"; fi
+  else echo "  aucune Jauge installée : rien à désinscrire"; fi
   # (c) les autres copies
   local found=() p
   while IFS= read -r p; do
@@ -145,6 +146,8 @@ AVANT=$(reglages)
 (( PROPRE )) && menage
 step 4 "Installation"
 zsh "$DIR/install.sh" "$DIR/Jauge.app" || fail "l'installation a échoué (voir le message ci-dessus)."
+if [[ -d /Applications/Jauge.app ]]; then APP="/Applications/Jauge.app"; else APP="$HOME/Applications/Jauge.app"; fi
+CTL="$APP/Contents/MacOS/Jauge"
 state=$("$CTL" --ctl install-state 2>/dev/null || echo "?")
 if [[ "$state" != "ready" ]]; then
   cat <<MSG
@@ -181,6 +184,6 @@ if [[ "$(printf '%s\n%s\n' 1.0.2 "${INSTALLEE:-0}" | sort -V | head -1)" != "1.0
 elif [[ "$RAPPORT" == "oui" ]] || { [[ "$RAPPORT" == "ask" ]] && ask "  Écrire un rapport de test (modèle, clés de charge, batterie) sur le Bureau, à envoyer à Lucas ?"; }; then
   "$CTL" --ctl rapport --fichier | tail -2
 else
-  echo "  Plus tard :  ~/Applications/Jauge.app/Contents/MacOS/Jauge --ctl rapport --fichier"
+  echo "  Plus tard :  $APP/Contents/MacOS/Jauge --ctl rapport --fichier"
 fi
 echo "\nTerminé."

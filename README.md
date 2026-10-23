@@ -28,7 +28,7 @@ curl -fsSL https://raw.githubusercontent.com/LucasHRCHatReply/jauge-releases/mai
 ```
 
 Le script télécharge la dernière version, vérifie la signature (équipe Apple `JT9FY7PP7K`, `codesign --verify
---deep --strict`), copie `Jauge.app` dans `~/Applications`, puis l'ouvre. Il garde réglages, historique et
+--deep --strict`), copie `Jauge.app` dans `/Applications` (macOS demande le mot de passe du Mac dans sa boîte ; le service de charge tourne en root, personne d'autre ne doit pouvoir le remplacer), puis l'ouvre. Il garde réglages, historique et
 appareils. Une seule étape reste manuelle, une fois : Réglages Système › Général › Ouverture et arrière-plan,
 activer « Jauge ».
 
@@ -68,7 +68,7 @@ supprimée, et le script demande avant d'effacer l'historique.
 ## Envoyer un rapport de test
 
 ```
-~/Applications/Jauge.app/Contents/MacOS/Jauge --ctl rapport --fichier
+/Applications/Jauge.app/Contents/MacOS/Jauge --ctl rapport --fichier
 ```
 
 Un fichier Markdown est écrit sur le Bureau : modèle du Mac, puce, macOS, clés de charge détectées, état de la
