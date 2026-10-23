@@ -28,8 +28,11 @@ step() { echo "\n[$1/5] $2"; }
 if [[ -z "${JAUGE_SANS_TTY:-}" && -r /dev/tty ]] && { : </dev/tty; } 2>/dev/null; then HAS_TTY=1; else HAS_TTY=0; fi
 ask() { (( HAS_TTY )) || return 1; local r; read -q "r?$1 [o/N] " </dev/tty || { echo; return 1; }; echo; return 0 }
 
-APP="/Applications/Jauge.app"
-[[ -d "$APP" ]] || { [[ -d "$HOME/Applications/Jauge.app" ]] && APP="$HOME/Applications/Jauge.app"; }   # ancienne installation
+# JAUGE_APP : app à traiter à la place de /Applications/Jauge.app (essais : un faux dossier, jamais le vrai démon).
+# En mode essai (JAUGE_PROPRE_SEUL), JAUGE_APP est obligatoire : sans lui le script viserait la vraie app et désinscrirait le vrai démon.
+if [[ -n "${JAUGE_PROPRE_SEUL:-}" && -z "${JAUGE_APP:-}" ]]; then echo "ÉCHEC : JAUGE_PROPRE_SEUL demande JAUGE_APP (un faux dossier d'essai)." >&2; exit 3; fi
+APP="${JAUGE_APP:-/Applications/Jauge.app}"
+[[ -n "${JAUGE_APP:-}" || -d "$APP" ]] || { [[ -d "$HOME/Applications/Jauge.app" ]] && APP="$HOME/Applications/Jauge.app"; }   # ancienne installation
 CTL="$APP/Contents/MacOS/Jauge"
 
 # Met un fichier ou une app à la Corbeille (jamais rm -rf). JAUGE_CORBEILLE : dossier de remplacement (essais).
