@@ -13,7 +13,7 @@ Ce dépôt ne contient que les versions à installer. Le code source n'est pas p
 - si AlDente, batt ou une autre app de limite de charge est installée : la quitter, deux apps qui pilotent la
   charge se contredisent.
 
-Aucun compte GitHub, aucun outil à installer, aucun mot de passe administrateur.
+Aucun compte GitHub, aucun outil à installer. Le compte du Mac doit être administrateur : macOS demande son mot de passe dans sa propre boîte, jamais dans Terminal.
 
 ## Installer
 
@@ -72,4 +72,4 @@ supprimée, et le script demande avant d'effacer l'historique.
 ```
 
 Un fichier Markdown est écrit sur le Bureau : modèle du Mac, puce, macOS, clés de charge détectées, état de la
-batterie. Ni nom, ni numéro de série. À envoyer à Lucas.
+batterie. Ni nom, ni numéro de série. À envoyer à l'auteur de Jauge.
